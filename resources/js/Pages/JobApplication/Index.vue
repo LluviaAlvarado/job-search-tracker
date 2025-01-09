@@ -1,19 +1,28 @@
 <template>
-  <Box v-for="jobApplication in jobApplications" :key="jobApplication.id">
-    <Link :href="`jobApplication/${ jobApplication.id }`">
-      {{ jobApplication.company_name }}
+  <div class="flex flex-col gap-4">
+    <Link
+      v-for="jobApplication in jobApplications"
+      :key="jobApplication.id"
+      :href="`jobApplication/${jobApplication.id}`"
+    >
+      <Box>
+        <div
+          class="container flex-2 w-3/12 bg-slate-200 dark:bg-slate-900 rounded-md p-2"
+        >
+          <span class="font-bold text-md">{{ jobApplication.company_name }}</span>
+          <br />
+          <span class="text-sm">{{ jobApplication.role }}</span>
+        </div>
+
+        <Steps class="flex-1" :job-application="jobApplication" />
+      </Box>
     </Link>
-    <Link :href="`jobApplication/${ jobApplication.id }/edit`">
-      Edit
-    </Link>
-    <Link :href="`jobApplication/${ jobApplication.id }`" method="DELETE">
-      Delete
-    </Link>
-  </Box>
+  </div>
 </template>
 <script setup>
 import { Link } from "@inertiajs/vue3"
 import Box from "@/Components/UI/Box.vue"
+import Steps from "@/Components/UI/Steps.vue"
 defineProps({
   jobApplications: Array,
 })

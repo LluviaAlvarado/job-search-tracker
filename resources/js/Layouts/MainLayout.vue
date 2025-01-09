@@ -4,18 +4,15 @@
   >
     <div class="container mx-auto">
       <nav class="flex p-4 items-center justify-between">
-        <div class="text-lg font-medium">
-          <Link href="/">Application List</Link>
-        </div>
         <div
           class="text-xl text-indigo-700 dark:text-indigo-300 font-bold text-center"
         >
           <Link href="/">Job Search Tracker</Link>
         </div>
         <div
-          class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium p-2 rounded-xl"
+          class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium p-2 rounded-full grow-0"
         >
-          <Link href="/jobApplication/create">+ New Application</Link>
+          <Link href="/jobApplication/create">+ New</Link>
         </div>
       </nav>
     </div>
@@ -32,5 +29,4 @@
 </template>
 <script setup>
 import { Link } from "@inertiajs/vue3"
-
 </script>

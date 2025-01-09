@@ -1,47 +1,68 @@
 <template>
   <form @submit.prevent="submit">
-    <div>
-      <div>
-        <label for="company_name">Company Name</label>
-        <input v-model="form.company_name" type="text" name="company_name" />
-        <div v-if="form.errors.company_name" class="errorMsg"> {{ form.errors.company_name }}</div>
-      </div>
-      <div>
-        <label for="role">Role</label>
-        <input v-model="form.role" type="text" name="role" />
-        <div v-if="form.errors.role" class="errorMsg"> {{ form.errors.role }}</div>
-      </div>
-      <div>
-        <label for="job_description">Job Description</label>
-        <br />
-        <textarea v-model="form.job_description" cols="80" rows="10" name="job_description" />
-        <div v-if="form.errors.job_description" class="errorMsg"> {{ form.errors.job_description }}</div>
-      </div>
-      <div>
-        <label for="job_requirements">Job Requirements</label>
-        <br />
-        <textarea v-model="form.job_requirements" cols="80" rows="10" name="job_requirements" />
-        <div v-if="form.errors.job_requirements" class="errorMsg"> {{ form.errors.job_requirements }}</div>
-      </div>
-      <div>
-        <label for="anual_salary">Anual Salary</label>
-        <input v-model="form.anual_salary" type="number" name="anual_salary" />
-        <div v-if="form.errors.anual_salary" class="errorMsg"> {{ form.errors.anual_salary }}</div>
-      </div>
-      <div>
-        <label for="cv">CV</label>
-        <input type="file" name="cv" @input="form.cv = $event.target.files[0]" />
-        <div v-if="form.errors.cv" class="errorMsg"> {{ form.errors.cv }}</div>
-      </div>
-
-      <div>
-        <button type="submit">Create</button>
-      </div>
+    <div class="flex flex-col gap-2">
+      <span
+        class="text-center font-bold text-lg text-emerald-800 dark:text-emerald-400"
+      >
+        New Job Application
+      </span>
+      <Input
+        v-model="form.company_name"
+        input-name="company_name"
+        label="Company Name"
+        input-type="text"
+        :error="form.errors.company_name"
+        @input-updated="($event) => (form.company_name = $event)"
+      />
+      <Input
+        v-model="form.role"
+        input-name="role"
+        label="Role"
+        input-type="text"
+        :error="form.errors.role"
+        @input-updated="($event) => (form.role = $event)"
+      />
+      <Input
+        v-model="form.job_description"
+        input-name="job_description"
+        label="Job Description"
+        input-type="textarea"
+        :error="form.errors.job_description"
+        @input-updated="($event) => (form.job_description = $event)"
+      />
+      <Input
+        v-model="form.job_requirements"
+        input-name="job_requirements"
+        label="Job Requirements"
+        input-type="textarea"
+        :error="form.errors.job_requirements"
+        @input-updated="($event) => (form.job_requirements = $event)"
+      />
+      <Input
+        v-model="form.anual_salary"
+        input-name="anual_salary"
+        label="Anual Salary"
+        input-type="number"
+        :error="form.errors.anual_salary"
+        @input-updated="($event) => (form.anual_salary = $event)"
+      />
+      <Input
+        v-model="form.cv"
+        input-name="cv"
+        label="CV"
+        input-type="file"
+        :error="form.errors.cv"
+        @input-updated="($event) => (form.cv = $event)"
+      />
+      <Button action="submit">Create</Button>
     </div>
   </form>
 </template>
 <script setup>
 import { useForm } from "@inertiajs/vue3"
+import Input from "@/Components/UI/Input.vue"
+import Button from "@/Components/Button.vue"
+
 const form = useForm({
   company_name: "",
   role: "",
@@ -53,14 +74,3 @@ const form = useForm({
 
 const submit = () => form.post("/jobApplication")
 </script>
-<style scoped>
-  label {
-    margin-right: 2em;
-  }
-  div {
-    padding: 2px;
-  }
-  .errorMsg {
-    color: red;
-  }
-</style>

@@ -6,6 +6,6 @@
 </template>
 <script setup>
 defineProps({
-    jobApplication: Object,
+  jobApplication: Object,
 })
 </script>
