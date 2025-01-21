@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class JobApplication extends Model
 {
@@ -21,4 +21,9 @@ class JobApplication extends Model
         'offer_date',
         'decision_date'
     ];
+
+    public function jobInterviews()
+    {
+        return $this->hasMany(JobInterview::class, 'job_application_id', 'id');
+    }
 }

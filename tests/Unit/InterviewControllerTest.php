@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
-class JobApplicationControllerTest extends TestCase
+class InterviewControllerTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -7,6 +7,7 @@
       v-model="model"
       :type="inputType"
       :name="inputName"
+      class="bg-slate-100 dark:bg-slate-800 rounded-md"
     />
     <textarea
       v-if="inputType === 'textarea'"
@@ -14,14 +15,30 @@
       cols="80"
       rows="10"
       :name="inputName"
+      class="bg-slate-100 dark:bg-slate-800 rounded-md"
     />
     <input
       v-if="inputType === 'file'"
       type="file"
       :name="inputName"
-      class="file:border-0 file:p-2 file:rounded-full file:bg-emerald-300 file:hover:bg-emerald-200 dark:file:bg-emerald-400 dark:file:hover:bg-emerald-300"
-      @input="onUpdate"
+      class="file:border-0 file:p-2 file:rounded-full file:bg-violet-400 file:hover:bg-violet-300 dark:file:bg-violet-600 dark:file:hover:bg-violet-500 dark:file:text-slate-50"
+      @input="onSelectFile"
     />
+    <div v-if="inputType === 'datetime'" class="flex gap-2">
+      <input
+        type="date"
+        :name="inputName"
+        class="bg-slate-100 dark:bg-slate-800 rounded-md"
+        @input="onSetDate"
+      />
+      <input
+        type="time"
+        :name="inputName"
+        class="bg-slate-100 dark:bg-slate-800 rounded-md"
+        @input="onSetTime"
+      />
+    </div>
+
     <span v-if="error" class="text-red-500 text-sm">
       {{ error }}
     </span>
@@ -37,9 +54,15 @@ defineProps({
   error: String,
 })
 
-const onUpdate = ($event) => {
-  if (this.inputType === "file") {
-    model.value = $event.target.files[0]
-  }
+const onSelectFile = ($event) => {
+  model.value = $event.target.files[0]
+}
+
+const onSetDate = ($event) => {
+  console.log($event.target.value)
+}
+
+const onSetTime = ($event) => {
+  console.log($event.target.value)
 }
 </script>

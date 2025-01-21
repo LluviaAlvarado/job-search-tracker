@@ -54,14 +54,16 @@
         :error="form.errors.cv"
         @input-updated="($event) => (form.cv = $event)"
       />
-      <Button action="submit">Save</Button>
+      <Button action="submit" class="self-center px-4" icon="accept">
+        Save
+      </Button>
     </div>
   </form>
 </template>
 <script setup>
 import { useForm } from "@inertiajs/vue3"
 import Input from "@/Components/UI/Input.vue"
-import Button from "@/Components/Button.vue"
+import Button from "@/Components/UI/Button.vue"
 
 const props = defineProps({
   jobApplication: Object,
@@ -75,5 +77,5 @@ const form = useForm({
   cv: props.jobApplication.cv,
 })
 
-const submit = () => form.put(`jobApplication/${props.jobApplication.id}`)
+const submit = () => form.put(`/jobApplication/${props.jobApplication.id}`)
 </script>

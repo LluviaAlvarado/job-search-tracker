@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class JobApplicationController extends Controller
 {
@@ -50,6 +52,7 @@ class JobApplicationController extends Controller
      */
     public function show(JobApplication $jobApplication)
     {
+        $jobApplication->load('jobInterviews');
         return inertia('JobApplication/Show', [
             'jobApplication' => $jobApplication
         ]);
@@ -81,6 +84,27 @@ class JobApplicationController extends Controller
         ]);
         return redirect()->route('jobApplication.index')
             ->with('success', 'Job Application edited correctly!');
+    }
+
+    /**
+     * Update the status of the job application.
+     */
+    public function updateStatus(Request $request, JobApplication $jobApplication)
+    {
+        $jobApplication->update([
+            ...$request->validate([
+                'status' => [
+                    'required',
+                    Rule::in(['New', 'Applied', 'Interviews', 'Offered', 'Rejected', 'Accepted'])
+                ],
+            ]),
+        ]);
+        return response()->json(
+            [
+                'message' => 'Job Application status updated to ' . $jobApplication->status
+            ],
+            Response::HTTP_OK
+        );
     }
 
     /**

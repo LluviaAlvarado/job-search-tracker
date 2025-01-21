@@ -5,11 +5,13 @@
       :key="jobApplication.id"
       :href="`jobApplication/${jobApplication.id}`"
     >
-      <Box>
+      <Box class="md:flex-row flex-col">
         <div
-          class="container flex-2 w-3/12 bg-slate-200 dark:bg-slate-900 rounded-md p-2"
+          class="container flex-2 md:w-3/12 bg-slate-200 dark:bg-slate-900 rounded-md p-2"
         >
-          <span class="font-bold text-md">{{ jobApplication.company_name }}</span>
+          <span class="font-bold text-md">
+            {{ jobApplication.company_name }}
+          </span>
           <br />
           <span class="text-sm">{{ jobApplication.role }}</span>
         </div>

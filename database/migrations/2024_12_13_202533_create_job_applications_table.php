@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('anual_salary')->nullable();
             $table->binary('cv')->nullable();
             $table->string('status', length: 10);
+            $table->boolean('offered')->default(false);
             $table->date('application_date')->nullable();
             $table->date('offer_date')->nullable();
             $table->date('decision_date')->nullable();

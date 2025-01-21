@@ -54,14 +54,16 @@
         :error="form.errors.cv"
         @input-updated="($event) => (form.cv = $event)"
       />
-      <Button action="submit">Create</Button>
+      <Button action="submit" class="self-center px-4" icon="accept">
+        Create
+      </Button>
     </div>
   </form>
 </template>
 <script setup>
 import { useForm } from "@inertiajs/vue3"
 import Input from "@/Components/UI/Input.vue"
-import Button from "@/Components/Button.vue"
+import Button from "@/Components/UI/Button.vue"
 
 const form = useForm({
   company_name: "",

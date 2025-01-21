@@ -9,11 +9,9 @@
         >
           <Link href="/">Job Search Tracker</Link>
         </div>
-        <div
-          class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium p-2 rounded-full grow-0"
-        >
-          <Link href="/jobApplication/create">+ New</Link>
-        </div>
+        <Button button-type="primary" icon="add" @click="goToCreate">
+          New
+        </Button>
       </nav>
     </div>
   </header>
@@ -29,4 +27,9 @@
 </template>
 <script setup>
 import { Link } from "@inertiajs/vue3"
+import Button from "@/Components/UI/Button.vue"
+
+const goToCreate = () => {
+  window.location.href = "/jobApplication/create"
+}
 </script>
