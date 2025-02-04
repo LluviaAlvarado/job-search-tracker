@@ -15,7 +15,9 @@ class JobApplicationController extends Controller
     public function index()
     {
         return inertia('JobApplication/Index', [
-            'jobApplications' => JobApplication::all()
+            'jobApplications' => JobApplication::with('jobInterviews')
+                ->WithoutCV()
+                ->get()
         ]);
     }
 
@@ -32,17 +34,22 @@ class JobApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        JobApplication::create([
-            ...$request->validate([
-                'company_name' => 'required|string|max:100',
-                'role' => 'required|string|max:100',
-                'job_description' => 'string',
-                'job_requirements' => 'string',
-                'anual_salary' => 'numeric',
-                'cv' => 'file|mimes:pdf',
-            ]),
-            'status' => 'New',
+        $validatedData = $request->validate([
+            'company_name' => 'required|string|max:100',
+            'role' => 'required|string|max:100',
+            'job_description' => 'string',
+            'job_requirements' => 'string',
+            'anual_salary' => 'numeric',
+            'cv' => 'file|mimes:pdf',
         ]);
+        if ($request->hasFile('cv')) {
+            $file = $request->file('cv');
+            $validatedData['cv_file'] = file_get_contents($file->getRealPath());
+            $validatedData['cv'] = $file->getClientOriginalName();
+        }
+        $validatedData['status'] = 'New';
+        JobApplication::create($validatedData);
+
         return redirect()->route('jobApplication.index')
             ->with('success', 'New Job Application created correctly!');
     }
@@ -52,10 +59,21 @@ class JobApplicationController extends Controller
      */
     public function show(JobApplication $jobApplication)
     {
-        $jobApplication->load('jobInterviews');
+        $jobApplication = $jobApplication->with('jobInterviews')
+            ->WithoutCV()->first();
         return inertia('JobApplication/Show', [
             'jobApplication' => $jobApplication
         ]);
+    }
+
+    /**
+     * Get the cv pdf file.
+     */
+    public function getCV(JobApplication $jobApplication)
+    {
+        return response($jobApplication->cv_file)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="' . $jobApplication->cv . '"');
     }
 
     /**
@@ -63,6 +81,7 @@ class JobApplicationController extends Controller
      */
     public function edit(JobApplication $jobApplication)
     {
+        $jobApplication = $jobApplication->WithoutCV()->first();
         return inertia('JobApplication/Edit', [
             'jobApplication' => $jobApplication
         ]);
@@ -98,6 +117,10 @@ class JobApplicationController extends Controller
                     Rule::in(['New', 'Applied', 'Interviews', 'Offered', 'Rejected', 'Accepted'])
                 ],
             ]),
+            ($request->get('status') === 'Applied' ? 'application_date' : null) => now(),
+            ($request->get('status') === 'Offered' ? 'offer_date' : null) => now(),
+            ($request->get('status') === 'Accepted' || $request->get('status') === 'Rejected' ?
+                'decision_date' : null) => now(),
         ]);
         return response()->json(
             [
@@ -112,8 +135,15 @@ class JobApplicationController extends Controller
      */
     public function destroy(JobApplication $jobApplication)
     {
+        $jobApplication->jobInterviews()->delete();
         $jobApplication->delete();
-        return redirect()->route('jobApplication.index')
-            ->with('success', 'Job Application deleted correctly!');
+        redirect()->route('jobApplication.index')
+            ->with('success', 'Job Application deleted successfully');
+        return response()->json(
+            [
+                'message' => 'Job Application deleted successfully.'
+            ],
+            Response::HTTP_OK
+        );
     }
 }

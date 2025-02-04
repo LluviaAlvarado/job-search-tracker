@@ -17,24 +17,28 @@
       :name="inputName"
       class="bg-slate-100 dark:bg-slate-800 rounded-md"
     />
-    <input
-      v-if="inputType === 'file'"
-      type="file"
-      :name="inputName"
-      class="file:border-0 file:p-2 file:rounded-full file:bg-violet-400 file:hover:bg-violet-300 dark:file:bg-violet-600 dark:file:hover:bg-violet-500 dark:file:text-slate-50"
-      @input="onSelectFile"
-    />
+    <div v-if="inputType === 'file'" class="flex flex-col gap-4">
+      <span class="mt-2 text-sm">Selected file: {{ file }}</span>
+      <input
+        type="file"
+        :name="inputName"
+        class="file:border-0 file:p-2 file:rounded-full file:bg-violet-400 file:hover:bg-violet-300 dark:file:bg-violet-600 dark:file:hover:bg-violet-500 dark:file:text-slate-50"
+        @input="onSelectFile"
+      />
+    </div>
     <div v-if="inputType === 'datetime'" class="flex gap-2">
       <input
         type="date"
         :name="inputName"
         class="bg-slate-100 dark:bg-slate-800 rounded-md"
+        :value="date"
         @input="onSetDate"
       />
       <input
         type="time"
         :name="inputName"
         class="bg-slate-100 dark:bg-slate-800 rounded-md"
+        :value="time"
         @input="onSetTime"
       />
     </div>
@@ -45,24 +49,44 @@
   </div>
 </template>
 <script setup>
+import { onMounted, ref } from "vue"
+
 const model = defineModel()
 
-defineProps({
+const date = ref("00-00-00")
+const time = ref("00:00")
+const file = ref("")
+
+const props = defineProps({
   label: String,
   inputName: String,
   inputType: String,
   error: String,
 })
 
+onMounted(() => {
+  if (model.value) {
+    if (props.inputType === "datetime") {
+      ;[date.value, time.value] = model.value.split(" ")
+    }
+    if (props.inputType === "file") {
+      file.value = model.value
+    }
+  }
+})
+
 const onSelectFile = ($event) => {
   model.value = $event.target.files[0]
+  file.value = model.value.name
 }
 
 const onSetDate = ($event) => {
-  console.log($event.target.value)
+  date.value = $event.target.value
+  model.value = date.value + " " + time.value
 }
 
 const onSetTime = ($event) => {
-  console.log($event.target.value)
+  time.value = $event.target.value
+  model.value = date.value + " " + time.value
 }
 </script>

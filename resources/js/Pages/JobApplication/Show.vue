@@ -45,6 +45,10 @@
         </div>
       </div>
 
+      <div>
+        <span>Latest Update: {{ latestUpdate }}</span>
+      </div>
+
       <Box class="flex-col">
         <span class="text-sm">Job Description</span>
         <span>{{ jobApplication.job_description }}</span>
@@ -53,6 +57,17 @@
         <span class="text-sm">Job Requirements</span>
         <span>{{ jobApplication.job_requirements }}</span>
       </Box>
+      <div class="flex p-2 gap-4">
+        <span>CV:</span>
+        <Button
+          icon="download"
+          button-type="none"
+          class="text-indigo-800 dark:text-indigo-400"
+          @click="downloadCV"
+        >
+          {{ jobApplication.cv }}
+        </Button>
+      </div>
     </Box>
     <Box class="flex-col">
       <div class="flex justify-between items-center">
@@ -63,9 +78,14 @@
       </div>
       <InterviewForm
         v-if="showInterviewForm"
+        :job-application-id="jobApplication.id"
+        :interview="interview"
         @close="() => (showInterviewForm = false)"
       />
-      <InterviewList :interviews="jobApplication.job_interviews" />
+      <InterviewList
+        :interviews="jobApplication.job_interviews"
+        @edit="(id) => startEditInterview(id)"
+      />
       <span />
     </Box>
   </div>
@@ -75,14 +95,42 @@ import Box from "@/Components/UI/Box.vue"
 import Button from "@/Components/UI/Button.vue"
 import InterviewList from "@/Components/Interview/InterviewList.vue"
 import InterviewForm from "@/Components/Interview/InterviewForm.vue"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import axios from "axios"
+import { saveAs } from "file-saver"
 const props = defineProps({
   jobApplication: Object,
 })
 const currentStatus = ref(props.jobApplication.status)
+const interview = ref(null)
 const showInterviewForm = ref(false)
+const latestUpdate = ref("")
 let possibleStatus = []
+
+onMounted(() => {
+  if (
+    props.jobApplication.status === "Applied" ||
+    (props.jobApplication.status === "Interviews" &&
+      !props.jobApplication.job_interviews)
+  ) {
+    latestUpdate.value = `Applied on ${props.jobApplication.application_date}`
+  } else if (
+    props.jobApplication.status === "Interviews" &&
+    props.jobApplication.job_interviews
+  ) {
+    latestUpdate.value = `Interview on ${props.jobApplication.job_interviews[0].scheduled_time}`
+  } else if (props.jobApplication.status === "Offered") {
+    latestUpdate.value = `Offered on ${props.jobApplication.offer_date}`
+  } else if (props.jobApplication.status === "Accepted") {
+    latestUpdate.value = `Accepted on ${props.jobApplication.decision_date}`
+  } else if (props.jobApplication.status === "Rejected") {
+    latestUpdate.value = `Rejected on ${props.jobApplication.decision_date}`
+  } else {
+    latestUpdate.value = `Created on ${
+      props.jobApplication.created_at.split("T")[0]
+    }`
+  }
+})
 
 const onStatusChange = (e) => {
   setPossibleStatus(e.target.value)
@@ -92,12 +140,42 @@ const onStatusChange = (e) => {
   })
 }
 
+const downloadCV = () => {
+  axios({
+    url: `/jobApplication/${props.jobApplication.id}/cv`,
+    method: "GET",
+    responseType: "blob",
+  })
+    .then((response) => {
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      })
+      const fileName = props.jobApplication.cv
+      saveAs(blob, fileName)
+    })
+    .catch((error) => {
+      console.error("Error downloading the CV:", error)
+    })
+}
+
 const goToEdit = () => {
   window.location.href = `/jobApplication/${props.jobApplication.id}/edit`
 }
 
+const startEditInterview = (id) => {
+  interview.value = props.jobApplication.job_interviews.find((i) => i.id === id)
+  showInterviewForm.value = true
+}
+
 const onDelete = () => {
-  // todo
+  axios
+    .delete(`/jobApplication/${props.jobApplication.id}`)
+    .then(() => {
+      window.location.href = "/jobApplication"
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 const setPossibleStatus = (status) => {

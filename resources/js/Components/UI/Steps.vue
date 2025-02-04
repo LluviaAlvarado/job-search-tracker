@@ -14,6 +14,9 @@
       >
         <EllipsisHorizontalIcon class="size-6" />
       </span>
+      <span>
+        {{ jobApplication.application_date || "" }}
+      </span>
     </div>
 
     <div class="flex flex-col items-center gap-2">
@@ -37,6 +40,13 @@
         class="bg-slate-400 dark:bg-slate-600 rounded-full w-max p-1"
       >
         <EllipsisHorizontalIcon class="size-6" />
+      </span>
+      <span>
+        {{
+          jobApplication.job_interviews
+            ? jobApplication.job_interviews[0]?.scheduled_time
+            : ""
+        }}
       </span>
     </div>
 
@@ -62,6 +72,9 @@
       >
         <EllipsisHorizontalIcon class="size-6" />
       </span>
+      <span>
+        {{ jobApplication.offer_date || "" }}
+      </span>
     </div>
 
     <div class="flex flex-col items-center gap-2">
@@ -84,6 +97,9 @@
       >
         <EllipsisHorizontalIcon class="size-6" />
       </span>
+      <span>
+        {{ jobApplication.decision_date || "" }}
+      </span>
     </div>
   </div>
 </template>
@@ -94,8 +110,11 @@ import {
   ChatBubbleLeftRightIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline"
-defineProps({
+import { onMounted } from "vue"
+const props = defineProps({
   jobApplication: Object,
 })
+onMounted(() => {
+  console.log(props.jobApplication)
+})
 </script>
-r

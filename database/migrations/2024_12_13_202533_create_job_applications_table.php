@@ -18,7 +18,8 @@ return new class extends Migration
             $table->text('job_description');
             $table->text('job_requirements');
             $table->double('anual_salary')->nullable();
-            $table->binary('cv')->nullable();
+            $table->string('cv')->nullable();
+            $table->binary('cv_file')->nullable();
             $table->string('status', length: 10);
             $table->boolean('offered')->default(false);
             $table->date('application_date')->nullable();

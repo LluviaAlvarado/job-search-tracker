@@ -44,18 +44,35 @@ import Input from "@/Components/UI/Input.vue"
 import Button from "../UI/Button.vue"
 import { useForm } from "@inertiajs/vue3"
 
+const props = defineProps({
+  jobApplicationId: Number,
+  interview: Object,
+})
+
 const form = useForm({
-  title: "",
-  contact_info: "",
-  description: "",
-  scheduled_time: null,
+  job_application_id: props.jobApplicationId,
+  title: props.interview ? props.interview.title : "",
+  contact_info: props.interview ? props.interview.contact_info : "",
+  description: props.interview ? props.interview.description : "",
+  scheduled_time: props.interview ? props.interview.scheduled_time : "",
 })
 
 const emit = defineEmits(["close"])
 
 const onSave = () => {
-  form.post("jobInterview")
-  emit("close")
+  if (props.interview) {
+    form.put(`/jobInterview/${props.interview.id}`, {
+      onSuccess: () => {
+        emit("close")
+      },
+    })
+  } else {
+    form.post("/jobInterview", {
+      onSuccess: () => {
+        emit("close")
+      },
+    })
+  }
 }
 
 const onCancel = () => {

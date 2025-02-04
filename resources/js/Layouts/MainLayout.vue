@@ -17,17 +17,29 @@
   </header>
   <main class="container mx-auto px-2 py-4">
     <div
-      v-if="$attrs.flash.success"
-      class="mb-4 border border-emerald-600 bg-emerald-300 text-emerald-950 rounded-md shadow-sm p-2"
+      v-if="$attrs.flash.success && showFlash"
+      class="mb-4 border border-emerald-600 bg-emerald-300 text-emerald-950 rounded-md shadow-sm p-2 flex justify-between"
     >
       {{ $attrs.flash.success }}
+      <Button
+        button-type="none"
+        icon="cancel"
+        @click="() => (showFlash = false)"
+      />
     </div>
     <slot />
   </main>
 </template>
 <script setup>
 import { Link } from "@inertiajs/vue3"
+import { ref } from "vue"
 import Button from "@/Components/UI/Button.vue"
+
+const showFlash = ref(true)
+
+onslotchange = () => {
+  showFlash.value = true
+}
 
 const goToCreate = () => {
   window.location.href = "/jobApplication/create"
