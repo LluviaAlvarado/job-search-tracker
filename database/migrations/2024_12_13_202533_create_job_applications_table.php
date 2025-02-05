@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('role', length: 100);
             $table->text('job_description');
             $table->text('job_requirements');
-            $table->double('anual_salary')->nullable();
+            $table->double('annual_salary')->nullable();
             $table->string('cv')->nullable();
             $table->binary('cv_file')->nullable();
             $table->string('status', length: 10);

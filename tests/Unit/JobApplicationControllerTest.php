@@ -36,7 +36,7 @@ class JobApplicationControllerTest extends TestCase
             'role' => 'Test Role',
             'job_description' => 'Test Description',
             'job_requirements' => 'Test Requirements',
-            'anual_salary' => 50000,
+            'annual_salary' => 50000,
             'cv' => UploadedFile::fake()->create('cv.pdf'),
             'status' => 'New',
         ];
@@ -75,7 +75,7 @@ class JobApplicationControllerTest extends TestCase
             'role' => 'Updated Role',
             'job_description' => 'Updated Description',
             'job_requirements' => 'Updated Requirements',
-            'anual_salary' => 60000,
+            'annual_salary' => 60000,
         ];
 
         $response = $this->put(route('jobApplication.update', $jobApplication->id), $data);

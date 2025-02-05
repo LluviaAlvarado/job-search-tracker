@@ -22,7 +22,7 @@ class JobApplicationFactory extends Factory
             'role' => fake()->text(50),
             'job_description' => fake()->text(200),
             'job_requirements' => fake()->text(200),
-            'anual_salary' => fake()->numberBetween(2000000, 10000000),
+            'annual_salary' => fake()->numberBetween(2000000, 10000000),
             'cv' => UploadedFile::fake()->create('cv.pdf'),
             'status' => 'New',
         ];

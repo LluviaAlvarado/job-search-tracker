@@ -9,6 +9,12 @@
           <span>
             {{ jobApplication.role }}
           </span>
+          <span v-if="jobApplication.annual_salary" class="text-sm">
+            Annual Salary
+          </span>
+          <span v-if="jobApplication.annual_salary">
+            {{ jobApplication.annual_salary }}
+          </span>
         </div>
 
         <div class="flex flex-col">

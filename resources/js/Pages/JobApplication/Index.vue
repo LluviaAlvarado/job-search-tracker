@@ -7,13 +7,15 @@
     >
       <Box class="md:flex-row flex-col">
         <div
-          class="container flex-2 md:w-3/12 bg-slate-200 dark:bg-slate-900 rounded-md p-2"
+          class="container flex flex-col flex-2 md:w-3/12 bg-slate-200 dark:bg-slate-900 rounded-md p-2"
         >
           <span class="font-bold text-md">
             {{ jobApplication.company_name }}
           </span>
-          <br />
           <span class="text-sm">{{ jobApplication.role }}</span>
+          <span v-if="jobApplication.annual_salary" class="text-sm">
+            Annual Salary: {{ jobApplication.annual_salary }}
+          </span>
         </div>
 
         <Steps class="flex-1" :job-application="jobApplication" />

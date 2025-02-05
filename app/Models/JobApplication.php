@@ -14,7 +14,7 @@ class JobApplication extends Model
         'role',
         'job_description',
         'job_requirements',
-        'anual_salary',
+        'annual_salary',
         'cv',
         'cv_file',
         'status',

@@ -39,7 +39,7 @@ class JobApplicationController extends Controller
             'role' => 'required|string|max:100',
             'job_description' => 'string',
             'job_requirements' => 'string',
-            'anual_salary' => 'numeric',
+            'annual_salary' => 'numeric',
             'cv' => 'file|mimes:pdf',
         ]);
         if ($request->hasFile('cv')) {
@@ -98,7 +98,7 @@ class JobApplicationController extends Controller
                 'role' => 'required|string|max:100',
                 'job_description' => 'string',
                 'job_requirements' => 'string',
-                'anual_salary' => 'numeric',
+                'annual_salary' => 'numeric',
             ]),
         ]);
         return redirect()->route('jobApplication.index')

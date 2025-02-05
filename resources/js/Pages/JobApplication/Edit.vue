@@ -39,12 +39,12 @@
         @input-updated="($event) => (form.job_requirements = $event)"
       />
       <Input
-        v-model="form.anual_salary"
-        input-name="anual_salary"
-        label="Anual Salary"
+        v-model="form.annual_salary"
+        input-name="annual_salary"
+        label="Annual Salary"
         input-type="number"
-        :error="form.errors.anual_salary"
-        @input-updated="($event) => (form.anual_salary = $event)"
+        :error="form.errors.annual_salary"
+        @input-updated="($event) => (form.annual_salary = $event)"
       />
       <Input
         v-model="form.cv"
@@ -73,7 +73,7 @@ const form = useForm({
   role: props.jobApplication.role,
   job_description: props.jobApplication.job_description,
   job_requirements: props.jobApplication.job_requirements,
-  anual_salary: props.jobApplication.anual_salary,
+  annual_salary: props.jobApplication.annual_salary,
   cv: props.jobApplication.cv,
 })
 
