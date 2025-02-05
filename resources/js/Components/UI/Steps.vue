@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center gap-2">
       Applied
       <span
-        v-if="jobApplication.status !== 'New'"
+        v-if="jobApplication.application_date"
         class="bg-emerald-400 dark:bg-emerald-600 rounded-full w-max p-1"
       >
         <CheckIcon class="size-6" />
@@ -43,8 +43,8 @@
       </span>
       <span>
         {{
-          jobApplication.job_interviews
-            ? jobApplication.job_interviews[0]?.scheduled_time
+          jobApplication.job_interviews.length
+            ? jobApplication.job_interviews[0].scheduled_time
             : ""
         }}
       </span>
@@ -53,14 +53,14 @@
     <div class="flex flex-col items-center gap-2">
       Offer
       <span
-        v-if="jobApplication.offered"
+        v-if="jobApplication.offer_date"
         class="bg-emerald-400 dark:bg-emerald-600 rounded-full w-max p-1"
       >
         <CheckIcon class="size-6" />
       </span>
       <span
         v-else-if="
-          !jobApplication.offered && jobApplication.status === 'Rejected'
+          !jobApplication.offer_date && jobApplication.status === 'Rejected'
         "
         class="bg-rose-400 dark:bg-rose-600 rounded-full w-max p-1"
       >
@@ -110,11 +110,7 @@ import {
   ChatBubbleLeftRightIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline"
-import { onMounted } from "vue"
-const props = defineProps({
+defineProps({
   jobApplication: Object,
-})
-onMounted(() => {
-  console.log(props.jobApplication)
 })
 </script>

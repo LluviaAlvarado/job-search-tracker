@@ -33,6 +33,6 @@ class JobApplication extends Model
     public function jobInterviews()
     {
         return $this->hasMany(JobInterview::class, 'job_application_id', 'id')
-            ->orderBy('scheduled_time', 'asc');
+            ->orderBy('scheduled_time', 'desc');
     }
 }

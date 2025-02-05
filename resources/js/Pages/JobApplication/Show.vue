@@ -18,6 +18,7 @@
             v-model="currentStatus"
             name="Status"
             class="rounded-lg dark:bg-slate-900 dark:text-slate-200"
+            value="currentStatus"
             @change="onStatusChange"
           >
             <option
@@ -69,7 +70,12 @@
         </Button>
       </div>
     </Box>
-    <Box class="flex-col">
+    <Box
+      v-if="
+        jobApplication.status !== 'New' && jobApplication.status !== 'Applied'
+      "
+      class="flex-col"
+    >
       <div class="flex justify-between items-center">
         <span>Interviews</span>
         <Button icon="add" @click="() => (showInterviewForm = true)">
@@ -108,6 +114,7 @@ const latestUpdate = ref("")
 let possibleStatus = []
 
 onMounted(() => {
+  currentStatus.value = props.jobApplication.status
   if (
     props.jobApplication.status === "Applied" ||
     (props.jobApplication.status === "Interviews" &&
@@ -116,7 +123,7 @@ onMounted(() => {
     latestUpdate.value = `Applied on ${props.jobApplication.application_date}`
   } else if (
     props.jobApplication.status === "Interviews" &&
-    props.jobApplication.job_interviews
+    props.jobApplication.job_interviews.length
   ) {
     latestUpdate.value = `Interview on ${props.jobApplication.job_interviews[0].scheduled_time}`
   } else if (props.jobApplication.status === "Offered") {

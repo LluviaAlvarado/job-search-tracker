@@ -59,8 +59,8 @@ class JobApplicationController extends Controller
      */
     public function show(JobApplication $jobApplication)
     {
-        $jobApplication = $jobApplication->with('jobInterviews')
-            ->WithoutCV()->first();
+        $jobApplication->offsetUnset('cv_file');
+        $jobApplication->load('jobInterviews');
         return inertia('JobApplication/Show', [
             'jobApplication' => $jobApplication
         ]);
@@ -81,7 +81,7 @@ class JobApplicationController extends Controller
      */
     public function edit(JobApplication $jobApplication)
     {
-        $jobApplication = $jobApplication->WithoutCV()->first();
+        $jobApplication->offsetUnset('cv_file');
         return inertia('JobApplication/Edit', [
             'jobApplication' => $jobApplication
         ]);
@@ -110,18 +110,39 @@ class JobApplicationController extends Controller
      */
     public function updateStatus(Request $request, JobApplication $jobApplication)
     {
-        $jobApplication->update([
+        $updateData = [
             ...$request->validate([
                 'status' => [
                     'required',
                     Rule::in(['New', 'Applied', 'Interviews', 'Offered', 'Rejected', 'Accepted'])
                 ],
             ]),
-            ($request->get('status') === 'Applied' ? 'application_date' : null) => now(),
-            ($request->get('status') === 'Offered' ? 'offer_date' : null) => now(),
-            ($request->get('status') === 'Accepted' || $request->get('status') === 'Rejected' ?
-                'decision_date' : null) => now(),
-        ]);
+        ];
+        if ($request->get('status') === 'New') {
+            // clean dates
+            $updateData = [
+                ...$updateData,
+                'application_date' => null,
+                'offer_date' => null,
+                'decision_date' => null
+            ];
+        } else if ($request->get('status') === 'Applied') {
+            $updateData = [
+                ...$updateData,
+                'application_date' => now(),
+            ];
+        } else if ($request->get('status') === 'Offered') {
+            $updateData = [
+                ...$updateData,
+                'offer_date' => now(),
+            ];
+        } else if ($request->get('status') === 'Accepted' || $request->get('status') === 'Rejected') {
+            $updateData = [
+                ...$updateData,
+                'decision_date' => now(),
+            ];
+        }
+        $jobApplication->update($updateData);
         return response()->json(
             [
                 'message' => 'Job Application status updated to ' . $jobApplication->status
