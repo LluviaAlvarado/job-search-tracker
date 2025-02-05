@@ -77,9 +77,7 @@
       </div>
     </Box>
     <Box
-      v-if="
-        jobApplication.status !== 'New' && jobApplication.status !== 'Applied'
-      "
+      v-if="currentStatus !== 'New' && currentStatus !== 'Applied'"
       class="flex-col"
     >
       <div class="flex justify-between items-center">
